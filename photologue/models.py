@@ -1,8 +1,9 @@
 import os
 import random
+import logging
+import exifread
 from datetime import datetime
 from inspect import isclass
-import logging
 from io import BytesIO
 from importlib import import_module
 
@@ -16,7 +17,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.encoding import force_text, smart_str, filepath_to_uri
-from django.utils.functional import curry
+from django.utils.functional import curry, cached_property
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.validators import RegexValidator
@@ -37,12 +38,12 @@ except ImportError:
         from PIL import ImageEnhance
     except ImportError:
         raise ImportError(
-            'Photologue was unable to import the Python Imaging Library. Please confirm it`s installed and available '
-            'on your current Python path.')
+            'Photologue was unable to import the Python Imaging Library. '
+            'Please confirm it`s installed and available on your current Python path.')
 
 from sortedm2m.fields import SortedManyToManyField
 
-from .utils import EXIF
+
 from .utils.reflection import add_reflection
 from .utils.watermark import apply_watermark
 from .managers import GalleryQuerySet, PhotoQuerySet
@@ -220,6 +221,8 @@ class Gallery(models.Model):
         """Return a sample of photos, ordered at random.
         If the 'count' is not specified, it will return a number of photos
         limited by the GALLERY_SAMPLE_SIZE setting.
+        :param public:
+        :param count:
         """
         if not count:
             count = SAMPLE_SIZE
@@ -232,7 +235,9 @@ class Gallery(models.Model):
         return random.sample(set(photo_set), count)
 
     def photo_count(self, public=True):
-        """Return a count of all the photos in this gallery."""
+        """Return a count of all the photos in this gallery.
+        :param public:
+        """
         if public:
             return self.public().count()
         else:
@@ -277,21 +282,9 @@ class ImageModel(models.Model):
     class Meta:
         abstract = True
 
-    @property
+    @cached_property
     def EXIF(self):
-        try:
-            f = self.image.storage.open(self.image.name, 'rb')
-            tags = EXIF.process_file(f)
-            f.close()
-            return tags
-        except:
-            try:
-                f = self.image.storage.open(self.image.name, 'rb')
-                tags = EXIF.process_file(f, details=False)
-                f.close()
-                return tags
-            except:
-                return {}
+        return exifread.process_file(self.image.file.file, details=False)
 
     def admin_thumbnail(self):
         func = getattr(self, 'get_admin_thumbnail_url', None)
@@ -420,6 +413,11 @@ class ImageModel(models.Model):
             return
         # Save the original format
         im_format = im.format
+        # Rotate if found & necessary
+        if 'Image Orientation' in self.EXIF and \
+                self.EXIF.get('Image Orientation').values[0] in IMAGE_EXIF_ORIENTATION_MAP:
+            im = im.transpose(
+                IMAGE_EXIF_ORIENTATION_MAP[self.EXIF.get('Image Orientation').values[0]])
         # Apply effect if found
         if self.effect is not None:
             im = self.effect.pre_process(im)
@@ -428,11 +426,6 @@ class ImageModel(models.Model):
         # Resize/crop image
         if im.size != photosize.size and photosize.size != (0, 0):
             im = self.resize_image(im, photosize)
-        # Rotate if found & necessary
-        if 'Image Orientation' in self.EXIF and \
-                self.EXIF.get('Image Orientation').values[0] in IMAGE_EXIF_ORIENTATION_MAP:
-            im = im.transpose(
-                IMAGE_EXIF_ORIENTATION_MAP[self.EXIF.get('Image Orientation').values[0]])
         # Apply watermark if found
         if photosize.watermark is not None:
             im = photosize.watermark.post_process(im)
@@ -481,16 +474,9 @@ class ImageModel(models.Model):
 
     def save(self, *args, **kwargs):
         if self.date_taken is None:
-            try:
-                exif_date = self.EXIF.get('EXIF DateTimeOriginal', None)
-                if exif_date is not None:
-                    d, t = str.split(exif_date.values)
-                    year, month, day = d.split(':')
-                    hour, minute, second = t.split(':')
-                    self.date_taken = datetime(int(year), int(month), int(day),
-                                               int(hour), int(minute), int(second))
-            except:
-                pass
+            exif_date = self.EXIF.get('EXIF DateTimeOriginal', None)
+            if exif_date is not None:
+                self.date_taken = datetime.strptime(exif_date.values, '%Y:%m:%d %H:%M:%S')
         if self.date_taken is None:
             self.date_taken = now()
         if self._get_pk_val() and (self._old_image != self.image):
@@ -498,7 +484,7 @@ class ImageModel(models.Model):
         super(ImageModel, self).save(*args, **kwargs)
         self.pre_cache()
 
-    def delete(self):
+    def delete(self, **kwargs):
         assert self._get_pk_val() is not None, \
             "%s object can't be deleted because its %s attribute is set to None." % \
             (self._meta.object_name, self._meta.pk.attname)
@@ -652,7 +638,7 @@ class BaseEffect(models.Model):
                 obj.clear_cache()
                 obj.pre_cache()
 
-    def delete(self):
+    def delete(self, **kwargs):
         try:
             default_storage.delete(self.sample_filename())
         except:
@@ -746,7 +732,7 @@ class Watermark(BaseEffect):
         verbose_name = _('watermark')
         verbose_name_plural = _('watermarks')
 
-    def delete(self):
+    def delete(self, **kwargs):
         assert self._get_pk_val() is not None, "%s object can't be deleted because its %s attribute is set to None." \
             % (self._meta.object_name, self._meta.pk.attname)
         super(Watermark, self).delete()
@@ -764,21 +750,23 @@ class PhotoSize(models.Model):
     so the name has to follow the same restrictions as any Python method name,
     e.g. no spaces or non-ascii characters."""
 
-    name = models.CharField(_('name'),
-                            max_length=40,
-                            unique=True,
-                            help_text=_(
-                                'Photo size name should contain only letters, numbers and underscores. Examples: '
-                                '"thumbnail", "display", "small", "main_page_widget".'),
-                            validators=[RegexValidator(regex='^[a-z0-9_]+$',
-                                                       message='Use only plain lowercase letters (ASCII), numbers and '
-                                                       'underscores.'
-                                                       )]
-                            )
-    width = models.PositiveIntegerField(_('width'),
-                                        default=0,
-                                        help_text=_(
-                                            'If width is set to "0" the image will be scaled to the supplied height.'))
+    name = models.CharField(
+        _('name'),
+        max_length=40,
+        unique=True,
+        help_text=_(
+            'Photo size name should contain only letters, numbers and underscores. Examples: '
+            '"thumbnail", "display", "small", "main_page_widget".'),
+        validators=[
+            RegexValidator(regex='^[a-z0-9_]+$',
+                           message='Use only plain lowercase letters (ASCII), numbers and '
+                                   'underscores.')
+        ]
+    )
+    width = models.PositiveIntegerField(
+        _('width'),
+        default=0,
+        help_text=_('If width is set to "0" the image will be scaled to the supplied height.'))
     height = models.PositiveIntegerField(_('height'),
                                          default=0,
                                          help_text=_(
@@ -842,14 +830,14 @@ class PhotoSize(models.Model):
         PhotoSizeCache().reset()
         self.clear_cache()
 
-    def delete(self):
+    def delete(self, **kwargs):
         assert self._get_pk_val() is not None, "%s object can't be deleted because its %s attribute is set to None." \
             % (self._meta.object_name, self._meta.pk.attname)
         self.clear_cache()
         super(PhotoSize, self).delete()
 
     def _get_size(self):
-        return (self.width, self.height)
+        return self.width, self.height
 
     def _set_size(self, value):
         self.width, self.height = value
