@@ -365,6 +365,12 @@ class ImageModel(models.Model):
     def resize_image(self, im, photosize):
         cur_width, cur_height = im.size
         new_width, new_height = photosize.size
+        if photosize.by_max_side:
+            if cur_height > cur_width:
+                new_height, new_width = max(photosize.size), min(photosize.size)
+            elif cur_width > cur_height:
+                new_width, new_height = max(photosize.size), min(photosize.size)
+
         if photosize.crop:
             ratio = max(float(new_width) / cur_width, float(new_height) / cur_height)
             x = (cur_width * ratio)
@@ -775,6 +781,11 @@ class PhotoSize(models.Model):
                                           choices=JPEG_QUALITY_CHOICES,
                                           default=70,
                                           help_text=_('JPEG image quality.'))
+    by_max_side = models.BooleanField(
+        _('use max side?'),
+        default=False,
+        help_text=_('If selected the image will be scaled to the max side')
+    )
     upscale = models.BooleanField(_('upscale images?'),
                                   default=False,
                                   help_text=_('If selected the image will be scaled up if necessary to fit the '
