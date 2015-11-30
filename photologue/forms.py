@@ -1,4 +1,6 @@
 import zipfile
+
+
 try:
     from zipfile import BadZipFile
 except ImportError:
@@ -24,6 +26,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.db.models import Q
 from django.utils.encoding import force_text
 from django.template.defaultfilters import slugify
 from django.core.files.base import ContentFile
@@ -83,7 +86,8 @@ class UploadZipForm(forms.Form):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        if title and Gallery.objects.filter(title=title).exists():
+        slug = slugify(unidecode(title))
+        if title and Gallery.objects.filter(Q(title=title) | Q(slug=slug)).exists():
             raise forms.ValidationError(_('A gallery with that title already exists.'))
         return title
 
