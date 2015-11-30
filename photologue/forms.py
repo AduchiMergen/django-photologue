@@ -13,6 +13,11 @@ try:
 except ImportError:
     from PIL import Image
 
+try:
+    from unidecode import unidecode
+except ImportError:
+    unidecode = lambda tag: tag
+
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -31,25 +36,28 @@ logger = logging.getLogger('photologue.forms')
 class UploadZipForm(forms.Form):
     zip_file = forms.FileField()
 
-    title = forms.CharField(label=_('Title'),
-                            max_length=50,
-                            required=False,
-                            help_text=_('All uploaded photos will be given a title made up of this title + a '
-                                        'sequential number.<br>This field is required if creating a new '
-                                        'gallery, but is optional when adding to an existing gallery - if '
-                                        'not supplied, the photo titles will be creating from the existing '
-                                        'gallery name.'))
-    gallery = forms.ModelChoiceField(Gallery.objects.all(),
-                                     label=_('Gallery'),
-                                     required=False,
-                                     help_text=_('Select a gallery to add these images to. Leave this empty to '
-                                                 'create a new gallery from the supplied title.'))
+    title = forms.CharField(
+        label=_('Title'),
+        max_length=50,
+        required=False,
+        help_text=_('All uploaded photos will be given a title made up of this title + a '
+                    'sequential number.<br>This field is required if creating a new '
+                    'gallery, but is optional when adding to an existing gallery - if '
+                    'not supplied, the photo titles will be creating from the existing '
+                    'gallery name.'))
+    gallery = forms.ModelChoiceField(
+        Gallery.objects.all(),
+        label=_('Gallery'),
+        required=False,
+        help_text=_('Select a gallery to add these images to. Leave this empty to '
+                    'create a new gallery from the supplied title.'))
     caption = forms.CharField(label=_('Caption'),
                               required=False,
                               help_text=_('Caption will be added to all photos.'))
-    description = forms.CharField(label=_('Description'),
-                                  required=False,
-                                  help_text=_('A description of this Gallery. Only required for new galleries.'))
+    description = forms.CharField(
+        label=_('Description'),
+        required=False,
+        help_text=_('A description of this Gallery. Only required for new galleries.'))
     is_public = forms.BooleanField(label=_('Is public'),
                                    initial=True,
                                    required=False,
@@ -102,7 +110,7 @@ class UploadZipForm(forms.Form):
             logger.debug(
                 force_text('Creating new gallery "{0}".').format(self.cleaned_data['title']))
             gallery = Gallery.objects.create(title=self.cleaned_data['title'],
-                                             slug=slugify(self.cleaned_data['title']),
+                                             slug=slugify(unidecode(self.cleaned_data['title'])),
                                              description=self.cleaned_data['description'],
                                              is_public=self.cleaned_data['is_public'])
             gallery.sites.add(current_site)
@@ -115,13 +123,15 @@ class UploadZipForm(forms.Form):
                 continue
 
             if os.path.dirname(filename):
-                logger.warning('Ignoring file "{0}" as it is in a subfolder; all images should be in the top '
-                               'folder of the zip.'.format(filename))
+                logger.warning(
+                    'Ignoring file "{0}" as it is in a subfolder; all images should be in the top '
+                    'folder of the zip.'.format(filename))
                 if request:
-                    messages.warning(request,
-                                     _('Ignoring file "{filename}" as it is in a subfolder; all images should '
-                                       'be in the top folder of the zip.').format(filename=filename),
-                                     fail_silently=True)
+                    messages.warning(
+                        request,
+                        _('Ignoring file "{filename}" as it is in a subfolder; all images should '
+                          'be in the top folder of the zip.').format(filename=filename),
+                        fail_silently=True)
                 continue
 
             data = zip.read(filename)
@@ -130,13 +140,16 @@ class UploadZipForm(forms.Form):
                 logger.debug('File "{0}" is empty.'.format(filename))
                 continue
 
-            photo_title_root = self.cleaned_data['title'] if self.cleaned_data['title'] else gallery.title
+            photo_title_root = self.cleaned_data['title'] if self.cleaned_data['title']\
+                else gallery.title
 
             # A photo might already exist with the same slug. So it's somewhat inefficient,
             # but we loop until we find a slug that's available.
+            photo_title = photo_title_root
+            slug = slugify(unidecode(photo_title))
             while True:
                 photo_title = ' '.join([photo_title_root, str(count)])
-                slug = slugify(photo_title)
+                slug = slugify(unidecode(photo_title))
                 if Photo.objects.filter(slug=slug).exists():
                     count += 1
                     continue
