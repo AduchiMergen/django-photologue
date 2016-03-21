@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import os
+import unittest
+
+from django import VERSION
 from django.conf import settings
 from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from ..models import Image, Photo, PHOTOLOGUE_DIR, PHOTOLOGUE_CACHEDIRTAG
 from .factories import LANDSCAPE_IMAGE_PATH, QUOTING_IMAGE_PATH, \
-    GalleryFactory, PhotoFactory
+    UNICODE_IMAGE_PATH, NONSENSE_IMAGE_PATH, GalleryFactory, PhotoFactory
 from .helpers import PhotologueBaseTest
 
 
@@ -84,7 +88,14 @@ class PhotoTest(PhotologueBaseTest):
 
         # Create a Photo with a name that needs quoting.
         self.pl2 = PhotoFactory(image__from_path=QUOTING_IMAGE_PATH)
-        self.assertIn('_%26quoting_',
+        # Quoting method filepath_to_uri has changed in Django 1.9 - so the string that we're looking
+        # for depends on the Django version.
+        if VERSION[0:2] == (1, 9):
+            quoted_string = 'test_photologue_quoting_testPhotoSize.jpg'
+        else:
+            quoted_string = 'test_photologue_%26quoting_testPhotoSize.jpg'
+        self.assertIn(quoted_string,
+                      self.pl2.get_testPhotoSize_url(),
                       self.pl2.get_testPhotoSize_url())
 
     def test_unicode(self):
@@ -203,3 +214,33 @@ class PreviousNextTest(PhotologueBaseTest):
                                  self.test_gallery)
 
         self.pl4.delete()
+
+
+class ImageModelTest(PhotologueBaseTest):
+
+    def setUp(self):
+        super(ImageModelTest, self).setUp()
+
+        # Unicode image has unicode in the path
+        #self.pu = TestPhoto(name='portrait')
+        self.pu = PhotoFactory()
+        self.pu.image.save(os.path.basename(UNICODE_IMAGE_PATH),
+                           ContentFile(open(UNICODE_IMAGE_PATH, 'rb').read()))
+
+        # Nonsense image contains nonsense
+        #self.pn = TestPhoto(name='portrait')
+        self.pn = PhotoFactory()
+        self.pn.image.save(os.path.basename(NONSENSE_IMAGE_PATH),
+                           ContentFile(open(NONSENSE_IMAGE_PATH, 'rb').read()))
+
+    def tearDown(self):
+        super(ImageModelTest, self).tearDown()
+        self.pu.delete()
+        self.pn.delete()
+
+    @unittest.skipUnless(os.path.exists(UNICODE_IMAGE_PATH),
+                         'Test relies on a file with a non-ascii filename - this cannot be distributed as it breaks '
+                         'under Python 2.7, so the distribution does not include that test file.')
+    def test_create_size(self):
+        """Nonsense image must not break scaling"""
+        self.pn.create_size(self.s)

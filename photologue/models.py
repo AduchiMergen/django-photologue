@@ -1,11 +1,12 @@
 import os
 import random
 import logging
-import exifread
 from datetime import datetime
 from inspect import isclass
 from io import BytesIO
 from importlib import import_module
+import exifread
+import unicodedata
 
 from django.utils.timezone import now
 from django.db import models
@@ -17,7 +18,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.encoding import force_text, smart_str, filepath_to_uri
-from django.utils.functional import curry, cached_property
+from django.utils.functional import curry
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.validators import RegexValidator
@@ -42,7 +43,6 @@ except ImportError:
             'Please confirm it`s installed and available on your current Python path.')
 
 from sortedm2m.fields import SortedManyToManyField
-
 
 from .utils.reflection import add_reflection
 from .utils.watermark import apply_watermark
@@ -81,7 +81,8 @@ if PHOTOLOGUE_PATH is not None:
         get_storage_path = getattr(module, parts[-1])
 else:
     def get_storage_path(instance, filename):
-        return os.path.join(PHOTOLOGUE_DIR, 'photos', filename)
+        fn = unicodedata.normalize('NFKD', force_text(filename)).encode('ascii', 'ignore').decode('ascii')
+        return os.path.join(PHOTOLOGUE_DIR, 'photos', fn)
 
 # Support CACHEDIR.TAG spec for backups for ignoring cache dir.
 # See http://www.brynosaurus.com/cachedir/spec.html
@@ -177,10 +178,11 @@ class Gallery(models.Model):
     date_added = models.DateTimeField(_('date published'),
                                       default=now)
     title = models.CharField(_('title'),
-                             max_length=50,
+                             max_length=250,
                              unique=True)
     slug = models.SlugField(_('title slug'),
                             unique=True,
+                            max_length=250,
                             help_text=_('A "slug" is a unique URL-friendly title for an object.'))
     description = models.TextField(_('description'),
                                    blank=True)
@@ -188,7 +190,7 @@ class Gallery(models.Model):
                                     default=True,
                                     help_text=_('Public galleries will be displayed '
                                                 'in the default views.'))
-    photos = SortedManyToManyField('Photo',
+    photos = SortedManyToManyField('photologue.Photo',
                                    related_name='galleries',
                                    verbose_name=_('photos'),
                                    blank=True)
@@ -264,7 +266,7 @@ class ImageModel(models.Model):
     date_taken = models.DateTimeField(_('date taken'),
                                       null=True,
                                       blank=True,
-                                      editable=False)
+                                      help_text=_('Date image was taken; is obtained from the image EXIF data.'))
     view_count = models.PositiveIntegerField(_('view count'),
                                              default=0,
                                              editable=False)
@@ -273,7 +275,7 @@ class ImageModel(models.Model):
                                  max_length=10,
                                  default='center',
                                  choices=CROP_ANCHOR_CHOICES)
-    effect = models.ForeignKey('PhotoEffect',
+    effect = models.ForeignKey('photologue.PhotoEffect',
                                null=True,
                                blank=True,
                                related_name="%(class)s_related",
@@ -282,9 +284,16 @@ class ImageModel(models.Model):
     class Meta:
         abstract = True
 
-    @cached_property
-    def EXIF(self):
-        return exifread.process_file(self.image.file.file, details=False)
+    def EXIF(self, file=None):
+        try:
+            if file:
+                tags = exifread.process_file(file)
+            else:
+                with self.image.storage.open(self.image.name, 'rb') as file:
+                    tags = exifread.process_file(file, details=False)
+            return tags
+        except:
+            return {}
 
     def admin_thumbnail(self):
         func = getattr(self, 'get_admin_thumbnail_url', None)
@@ -479,14 +488,30 @@ class ImageModel(models.Model):
         self._old_image = self.image
 
     def save(self, *args, **kwargs):
-        if self.date_taken is None:
-            exif_date = self.EXIF.get('EXIF DateTimeOriginal', None)
-            if exif_date is not None:
-                self.date_taken = datetime.strptime(exif_date.values, '%Y:%m:%d %H:%M:%S')
-        if self.date_taken is None:
-            self.date_taken = now()
+        image_has_changed = False
         if self._get_pk_val() and (self._old_image != self.image):
+            image_has_changed = True
+            # If we have changed the image, we need to clear from the cache all instances of the old
+            # image; clear_cache() works on the current (new) image, and in turn calls several other methods.
+            # Changing them all to act on the old image was a lot of changes, so instead we temporarily swap old
+            # and new images.
+            new_image = self.image
+            self.image = self._old_image
             self.clear_cache()
+            self.image = new_image  # Back to the new image.
+            self._old_image.storage.delete(self._old_image.name)  # Delete (old) base image.
+        if self.date_taken is None or image_has_changed:
+            # Attempt to get the date the photo was taken from the EXIF data.
+            try:
+                exif_date = self.EXIF(self.image.file).get('EXIF DateTimeOriginal', None)
+                if exif_date is not None:
+                    d, t = str.split(exif_date.values)
+                    year, month, day = d.split(':')
+                    hour, minute, second = t.split(':')
+                    self.date_taken = datetime(int(year), int(month), int(day),
+                                               int(hour), int(minute), int(second))
+            except:
+                logger.error('Failed to read EXIF DateTimeOriginal', exc_info=True)
         super(ImageModel, self).save(*args, **kwargs)
         self.pre_cache()
 
@@ -507,10 +532,11 @@ class ImageModel(models.Model):
 @python_2_unicode_compatible
 class Photo(ImageModel):
     title = models.CharField(_('title'),
-                             max_length=60,
+                             max_length=250,
                              unique=True)
     slug = models.SlugField(_('slug'),
                             unique=True,
+                            max_length=250,
                             help_text=_('A "slug" is a unique URL-friendly title for an object.'))
     caption = models.TextField(_('caption'),
                                blank=True)
@@ -803,12 +829,12 @@ class PhotoSize(models.Model):
                                           default=False,
                                           help_text=_('If selected the image\'s "view_count" will be incremented when '
                                                       'this photo size is displayed.'))
-    effect = models.ForeignKey('PhotoEffect',
+    effect = models.ForeignKey('photologue.PhotoEffect',
                                null=True,
                                blank=True,
                                related_name='photo_sizes',
                                verbose_name=_('photo effect'))
-    watermark = models.ForeignKey('Watermark',
+    watermark = models.ForeignKey('photologue.Watermark',
                                   null=True,
                                   blank=True,
                                   related_name='photo_sizes',

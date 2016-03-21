@@ -8,18 +8,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Photologue\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-30 23:33+0600\n"
-"PO-Revision-Date: 2015-11-30 17:40+0000\n"
-"Last-Translator:   <aduchimergen@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/django-photologue/language/ru/)\n"
+"POT-Creation-Date: 2015-12-23 14:48+0000\n"
+"PO-Revision-Date: 2015-05-23 20:33+0000\n"
+"Last-Translator: Richard Barran <richard@arbee-design.co.uk>\n"
+"Language-Team: Russian (http://www.transifex.com/richardbarran/django-"
+"photologue/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Translated-Using: django-rosetta 0.7.6\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: admin.py:63
+#: admin.py:62
 #, python-format
 msgid ""
 "The following photo does not belong to the same site(s) as the gallery, so "
@@ -32,7 +34,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: admin.py:75
+#: admin.py:74
 #, python-format
 msgid "The gallery has been successfully added to %(site)s"
 msgid_plural "The galleries have been successfully added to %(site)s"
@@ -41,11 +43,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: admin.py:82
+#: admin.py:81
 msgid "Add selected galleries to the current site"
 msgstr ""
 
-#: admin.py:88
+#: admin.py:87
 #, python-format
 msgid "The gallery has been successfully removed from %(site)s"
 msgid_plural ""
@@ -55,11 +57,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: admin.py:95
+#: admin.py:94
 msgid "Remove selected galleries from the current site"
 msgstr ""
 
-#: admin.py:102
+#: admin.py:101
 #, python-format
 msgid ""
 "All photos in gallery %(galleries)s have been successfully added to %(site)s"
@@ -71,11 +73,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: admin.py:113
+#: admin.py:112
 msgid "Add all photos of selected galleries to the current site"
 msgstr ""
 
-#: admin.py:120
+#: admin.py:119
 #, python-format
 msgid ""
 "All photos in gallery %(galleries)s have been successfully removed from "
@@ -88,7 +90,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: admin.py:131
+#: admin.py:130
 msgid "Remove all photos in selected galleries from the current site"
 msgstr ""
 
@@ -108,8 +110,7 @@ msgstr ""
 #: admin.py:184
 #, python-format
 msgid "The photo has been successfully removed from %(site)s"
-msgid_plural ""
-"The selected photos have been successfully removed from %(site)s"
+msgid_plural "The selected photos have been successfully removed from %(site)s"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -121,290 +122,286 @@ msgstr ""
 
 #: admin.py:205 templates/admin/photologue/photo/upload_zip.html:27
 msgid "Upload a zip archive of photos"
-msgstr "Загрузка Zip архива с фотографиями"
+msgstr ""
 
-#: forms.py:40
+#: forms.py:34
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
-#: forms.py:43
+#: forms.py:37
 msgid ""
 "All uploaded photos will be given a title made up of this title + a "
 "sequential number.<br>This field is required if creating a new gallery, but "
 "is optional when adding to an existing gallery - if not supplied, the photo "
 "titles will be creating from the existing gallery name."
 msgstr ""
-"Всем загруженным фотографиям будет присвоено название составленное из этого "
-"названия и порядкового номера изображения.<br> Это поле является "
-"обязательным, для создания новой галереи, но не является обязательным при "
-"добавлении к существующей галерее - если не указано, названия фото будут "
-"созданы из имени галереи."
 
-#: forms.py:50
+#: forms.py:43
 msgid "Gallery"
-msgstr "Галерея"
+msgstr ""
 
-#: forms.py:52
+#: forms.py:45
 msgid ""
 "Select a gallery to add these images to. Leave this empty to create a new "
 "gallery from the supplied title."
 msgstr ""
-"Выберете галерею для загрузки фотографий. Оставьте поле пустым для создания "
-"новой галереи с соответствующим названием."
 
-#: forms.py:54
+#: forms.py:47
 msgid "Caption"
-msgstr "Описание"
+msgstr ""
 
-#: forms.py:56
+#: forms.py:49
 msgid "Caption will be added to all photos."
-msgstr "Описание будет добавлено ко всем фотографиям."
+msgstr "Заголовок будет добавлен ко всем фотографиям."
 
-#: forms.py:58
+#: forms.py:50
 msgid "Description"
-msgstr "Описание галереи"
+msgstr ""
 
-#: forms.py:60
+#: forms.py:52
+#, fuzzy
 #| msgid "A description of this Gallery."
 msgid "A description of this Gallery. Only required for new galleries."
-msgstr "Описание для этой галереи. Необходимо только для новой галереи."
+msgstr "Описание для этой галереи."
 
-#: forms.py:61
+#: forms.py:53
 msgid "Is public"
-msgstr "Опубликовать"
+msgstr ""
 
-#: forms.py:64
+#: forms.py:56
 msgid ""
 "Uncheck this to make the uploaded gallery and included photographs private."
 msgstr ""
 "Снимите эту галку, чтобы сделать загруженную галерею и включенные в нее "
 "фотографии приватными."
 
-#: forms.py:87
+#: forms.py:79
 msgid "A gallery with that title already exists."
-msgstr "Уже существует галерея с таким названием"
+msgstr ""
 
-#: forms.py:97
+#: forms.py:89
 msgid "Select an existing gallery, or enter a title for a new gallery."
-msgstr "Выберете существующую галерею, или введите название новой галереи"
+msgstr ""
 
-#: forms.py:132
+#: forms.py:122
 #, python-brace-format
 msgid ""
 "Ignoring file \"{filename}\" as it is in a subfolder; all images should be "
 "in the top folder of the zip."
 msgstr ""
-"Файл \"{filename}\" пропущен, так как находится в поддиректории; все "
-"изображения должны находиться в корневой директории архива."
 
-#: forms.py:176
+#: forms.py:163
 #, python-brace-format
 msgid "Could not process file \"{0}\" in the .zip archive."
-msgstr "Не удалось обработать файл  \"{0}\" в .zip архиве."
+msgstr ""
 
-#: forms.py:192
+#: forms.py:179
 #, python-brace-format
 msgid "The photos have been added to gallery \"{0}\"."
-msgstr "Фотографии были добавлены в галерею \"{0}\"."
+msgstr ""
 
-#: models.py:115
+#: models.py:114
 msgid "Very Low"
 msgstr "Очень низкое"
 
-#: models.py:116
+#: models.py:115
 msgid "Low"
 msgstr "Низкое"
 
-#: models.py:117
+#: models.py:116
 msgid "Medium-Low"
 msgstr "Чуть хуже среднего"
 
-#: models.py:118
+#: models.py:117
 msgid "Medium"
 msgstr "Среднее"
 
-#: models.py:119
+#: models.py:118
 msgid "Medium-High"
 msgstr "Чуть лучше среднего"
 
-#: models.py:120
+#: models.py:119
 msgid "High"
 msgstr "Высокое"
 
-#: models.py:121
+#: models.py:120
 msgid "Very High"
 msgstr "Очень высокое"
 
-#: models.py:126
+#: models.py:125
 msgid "Top"
 msgstr "Верхняя сторона"
 
-#: models.py:127
+#: models.py:126
 msgid "Right"
 msgstr "Правая сторона"
 
-#: models.py:128
+#: models.py:127
 msgid "Bottom"
 msgstr "Нижняя сторона"
 
-#: models.py:129
+#: models.py:128
 msgid "Left"
 msgstr "Левая сторона"
 
-#: models.py:130
+#: models.py:129
 msgid "Center (Default)"
 msgstr "Центр (По-умолчанию)"
 
-#: models.py:134
+#: models.py:133
 msgid "Flip left to right"
 msgstr "Зеркально отобразить слева направо"
 
-#: models.py:135
+#: models.py:134
 msgid "Flip top to bottom"
 msgstr "Зеркально отобразить сверху вниз"
 
-#: models.py:136
+#: models.py:135
 msgid "Rotate 90 degrees counter-clockwise"
 msgstr "Повернуть на 90 градусов против часовой стрелке"
 
-#: models.py:137
+#: models.py:136
 msgid "Rotate 90 degrees clockwise"
 msgstr "Повернуть на 90 градусов по часовой стрелке"
 
-#: models.py:138
+#: models.py:137
 msgid "Rotate 180 degrees"
 msgstr "Повернуть на 180 градусов"
 
-#: models.py:142
+#: models.py:141
 msgid "Tile"
 msgstr "Разместить мозайкой"
 
-#: models.py:143
+#: models.py:142
 msgid "Scale"
 msgstr "Масштабировать"
 
-#: models.py:153
+#: models.py:152
 #, python-format
 msgid ""
-"Chain multiple filters using the following pattern "
-"\"FILTER_ONE->FILTER_TWO->FILTER_THREE\". Image filters will be applied in "
-"order. The following filters are available: %s."
+"Chain multiple filters using the following pattern \"FILTER_ONE->FILTER_TWO-"
+">FILTER_THREE\". Image filters will be applied in order. The following "
+"filters are available: %s."
 msgstr ""
-"Цепочка фильтров для изображений (\"ФИЛЬТР_1->ФИЛЬТР_2->ФИЛЬТР_3\"). Фильтры"
-" будут применены по порядку. Доступны следующие фильтры: %s."
+"Цепочка фильтров для изображений (\"ФИЛЬТР_1->ФИЛЬТР_2->ФИЛЬТР_3\"). Фильтры "
+"будут применены по порядку. Доступны следующие фильтры: %s."
 
-#: models.py:177
+#: models.py:176
 msgid "date published"
 msgstr "дата публикации"
 
-#: models.py:179 models.py:509
+#: models.py:178 models.py:513
 msgid "title"
 msgstr "название"
 
-#: models.py:182
+#: models.py:181
 msgid "title slug"
 msgstr "слаг название"
 
-#: models.py:184 models.py:514
+#: models.py:183 models.py:518
 msgid "A \"slug\" is a unique URL-friendly title for an object."
 msgstr ""
 "\"слаг\" - это уникальное читаемое название для объекта в адресной строке."
 
-#: models.py:185 models.py:586
+#: models.py:184 models.py:590
 msgid "description"
 msgstr "описание"
 
-#: models.py:187 models.py:519
+#: models.py:186 models.py:523
 msgid "is public"
 msgstr "публично"
 
-#: models.py:189
+#: models.py:188
 msgid "Public galleries will be displayed in the default views."
 msgstr "Публичные галереи будут отображены в представлениях по-умолчанию."
 
-#: models.py:193 models.py:531
+#: models.py:192 models.py:535
 msgid "photos"
 msgstr "фотографии"
 
-#: models.py:195 models.py:522
+#: models.py:194 models.py:526
 msgid "sites"
 msgstr ""
 
-#: models.py:203
+#: models.py:202
 msgid "gallery"
 msgstr "галерея"
 
-#: models.py:204
+#: models.py:203
 msgid "galleries"
 msgstr "галереи"
 
-#: models.py:245
+#: models.py:240
 msgid "count"
 msgstr "количество"
 
-#: models.py:261 models.py:727
+#: models.py:256 models.py:731
 msgid "image"
 msgstr "изображение"
 
-#: models.py:264
+#: models.py:259
 msgid "date taken"
 msgstr "дата наложения"
 
-#: models.py:268
-msgid "view count"
-msgstr "кол-во просмотров"
+#: models.py:262
+msgid "Date image was taken; is obtained from the image EXIF data."
+msgstr ""
 
-#: models.py:271
+#: models.py:263
+msgid "view count"
+msgstr ""
+
+#: models.py:266
 msgid "crop from"
 msgstr "обрезанный из"
 
-#: models.py:280
+#: models.py:275
 msgid "effect"
 msgstr "эффект"
 
-#: models.py:292
+#: models.py:294
 msgid "An \"admin_thumbnail\" photo size has not been defined."
 msgstr "Размер миниатюры \"admin_thumbnail\" не определен."
 
-#: models.py:300
+#: models.py:302
 msgid "Thumbnail"
 msgstr "Миниатюра"
 
-#: models.py:512
+#: models.py:516
 msgid "slug"
 msgstr "слаг"
 
-#: models.py:515
+#: models.py:519
 msgid "caption"
 msgstr "заголовок"
 
-#: models.py:517
+#: models.py:521
 msgid "date added"
 msgstr "дата добавления"
 
-#: models.py:521
+#: models.py:525
 msgid "Public photographs will be displayed in the default views."
 msgstr ""
 "Публичные фотографии будут отображены в используемых представлениях по "
 "умолчанию."
 
-#: models.py:530
+#: models.py:534
 msgid "photo"
 msgstr "фотография"
 
-#: models.py:583 models.py:760
+#: models.py:587 models.py:763
 msgid "name"
 msgstr "имя"
 
-#: models.py:658
+#: models.py:662
 msgid "rotate or flip"
 msgstr "повернуть или зеркально отобразить"
 
-#: models.py:662 models.py:690
+#: models.py:666 models.py:694
 msgid "color"
 msgstr "цвет"
 
-#: models.py:664
+#: models.py:668
 msgid ""
 "A factor of 0.0 gives a black and white image, a factor of 1.0 gives the "
 "original image."
@@ -412,11 +409,11 @@ msgstr ""
 "Значение коэффициента 0.0 дает черно-белое изображение, а значение  "
 "коэффициента 1.0 дает оригинальное изображение."
 
-#: models.py:666
+#: models.py:670
 msgid "brightness"
 msgstr "яркость"
 
-#: models.py:668
+#: models.py:672
 msgid ""
 "A factor of 0.0 gives a black image, a factor of 1.0 gives the original "
 "image."
@@ -424,23 +421,23 @@ msgstr ""
 "Значение коэффициента 0.0 дает черное изображение, а значение  коэффициента "
 "1.0 дает оригинальное изображение."
 
-#: models.py:670
+#: models.py:674
 msgid "contrast"
 msgstr "контраст"
 
-#: models.py:672
+#: models.py:676
 msgid ""
-"A factor of 0.0 gives a solid grey image, a factor of 1.0 gives the original"
-" image."
+"A factor of 0.0 gives a solid grey image, a factor of 1.0 gives the original "
+"image."
 msgstr ""
 "Значение коэффициента 0.0 дает сплошное серое изображение, а значение  "
 "коэффициента 1.0 дает оригинальное изображение."
 
-#: models.py:674
+#: models.py:678
 msgid "sharpness"
 msgstr "резкость"
 
-#: models.py:676
+#: models.py:680
 msgid ""
 "A factor of 0.0 gives a blurred image, a factor of 1.0 gives the original "
 "image."
@@ -448,15 +445,15 @@ msgstr ""
 "Значение коэффициента 0.0 дает расплывчатое изображение, а значение  "
 "коэффициента 1.0 дает оригинальное изображение."
 
-#: models.py:678
+#: models.py:682
 msgid "filters"
 msgstr "фильтры"
 
-#: models.py:682
+#: models.py:686
 msgid "size"
 msgstr "размер"
 
-#: models.py:684
+#: models.py:688
 msgid ""
 "The height of the reflection as a percentage of the orignal image. A factor "
 "of 0.0 adds no reflection, a factor of 1.0 adds a reflection equal to the "
@@ -466,15 +463,15 @@ msgstr ""
 "коэффициента 0.0 не добавляет отображения, а значение коэффициента 1.0 "
 "добавляет отражение равное высоте оригинального изображения."
 
-#: models.py:687
+#: models.py:691
 msgid "strength"
 msgstr "сила"
 
-#: models.py:689
+#: models.py:693
 msgid "The initial opacity of the reflection gradient."
 msgstr "Начальная непрозрачность градиента отражения."
 
-#: models.py:693
+#: models.py:697
 msgid ""
 "The background color of the reflection gradient. Set this to match the "
 "background color of your page."
@@ -482,35 +479,35 @@ msgstr ""
 "Цвет фона градиента отражения. Отметьте это для соответствия цвету фона "
 "Вашей страницы."
 
-#: models.py:697 models.py:810
+#: models.py:701 models.py:807
 msgid "photo effect"
 msgstr "фотоэффект"
 
-#: models.py:698
+#: models.py:702
 msgid "photo effects"
 msgstr "фотоэффекты"
 
-#: models.py:729
+#: models.py:733
 msgid "style"
 msgstr "стиль"
 
-#: models.py:733
+#: models.py:737
 msgid "opacity"
 msgstr "непрозрачность"
 
-#: models.py:735
+#: models.py:739
 msgid "The opacity of the overlay."
 msgstr "Непрозрачность подложки."
 
-#: models.py:738
+#: models.py:742
 msgid "watermark"
 msgstr "водяной знак"
 
-#: models.py:739
+#: models.py:743
 msgid "watermarks"
 msgstr "водяные знаки"
 
-#: models.py:764
+#: models.py:767
 msgid ""
 "Photo size name should contain only letters, numbers and underscores. "
 "Examples: \"thumbnail\", \"display\", \"small\", \"main_page_widget\"."
@@ -519,53 +516,41 @@ msgstr ""
 "подчеркивания. Примеры: \"thumbnail\", \"display\", \"small\", "
 "\"main_page_widget\"."
 
-#: models.py:773
+#: models.py:774
 msgid "width"
 msgstr "ширина"
 
-#: models.py:775
-msgid "If width is set to \"0\" the image will be scaled to the supplied height."
+#: models.py:777
+msgid ""
+"If width is set to \"0\" the image will be scaled to the supplied height."
 msgstr ""
 "Если ширина выставлена в \"0\", то изображение будет мастштабировано по "
 "высоте."
 
-#: models.py:776
+#: models.py:778
 msgid "height"
 msgstr "высота"
 
-#: models.py:779
-msgid "If height is set to \"0\" the image will be scaled to the supplied width"
+#: models.py:781
+msgid ""
+"If height is set to \"0\" the image will be scaled to the supplied width"
 msgstr ""
 "Если высота выставлена в \"0\", то изображение будет мастштабировано по "
 "ширине"
 
-#: models.py:780
+#: models.py:782
 msgid "quality"
 msgstr "качество"
 
-#: models.py:783
+#: models.py:785
 msgid "JPEG image quality."
 msgstr "качество JPEG изображения."
 
-#: models.py:785
-msgid "use max side?"
-msgstr ""
-
-#: models.py:787
-#, fuzzy
-#| msgid ""
-#| "If selected the image will be scaled and cropped to fit the supplied "
-#| "dimensions."
-msgid "If selected the image will be scaled to the max side"
-msgstr ""
-"Если выбранно, то изображение будет масштабировано и обрезано, чтобы "
-"подходить по габаритам."
-
-#: models.py:789
+#: models.py:786
 msgid "upscale images?"
 msgstr "увеличивать изображения?"
 
-#: models.py:791
+#: models.py:788
 msgid ""
 "If selected the image will be scaled up if necessary to fit the supplied "
 "dimensions. Cropped sizes will be upscaled regardless of this setting."
@@ -574,11 +559,11 @@ msgstr ""
 "чтобы соответствовать габаритам. Обрезанные размеры будут увеличены в "
 "масштабе независимо от этой настройки."
 
-#: models.py:795
+#: models.py:792
 msgid "crop to fit?"
 msgstr "обрезать?"
 
-#: models.py:797
+#: models.py:794
 msgid ""
 "If selected the image will be scaled and cropped to fit the supplied "
 "dimensions."
@@ -586,21 +571,21 @@ msgstr ""
 "Если выбранно, то изображение будет масштабировано и обрезано, чтобы "
 "подходить по габаритам."
 
-#: models.py:799
+#: models.py:796
 msgid "pre-cache?"
 msgstr "кэшировать?"
 
-#: models.py:801
+#: models.py:798
 msgid "If selected this photo size will be pre-cached as photos are added."
 msgstr ""
 "Если выбранно, то размер фотографии будет закэширован при добавлении "
 "фотографий"
 
-#: models.py:802
+#: models.py:799
 msgid "increment view count?"
 msgstr "увеличивать счетчик просмотров?"
 
-#: models.py:804
+#: models.py:801
 msgid ""
 "If selected the image's \"view_count\" will be incremented when this photo "
 "size is displayed."
@@ -608,34 +593,34 @@ msgstr ""
 "Если выбрано, то \"view_count\" изображения будет увеличено когда "
 "показывается этот размер фотографии."
 
-#: models.py:815
+#: models.py:812
 msgid "watermark image"
 msgstr "изображение водяного знака"
 
-#: models.py:819
+#: models.py:816
 msgid "photo size"
 msgstr "размер фотографии"
 
-#: models.py:820
+#: models.py:817
 msgid "photo sizes"
 msgstr "размеры фотографий"
 
-#: models.py:837
+#: models.py:834
 msgid "Can only crop photos if both width and height dimensions are set."
-msgstr "Можно обрезать фото только если установленны длинна и ширина."
+msgstr ""
 
 #: templates/admin/photologue/photo/change_list.html:9
 msgid "Upload a zip archive"
-msgstr "Загрузить zip архив"
+msgstr ""
 
 #: templates/admin/photologue/photo/upload_zip.html:15
 msgid "Home"
-msgstr "Главная"
+msgstr ""
 
 #: templates/admin/photologue/photo/upload_zip.html:19
 #: templates/admin/photologue/photo/upload_zip.html:53
 msgid "Upload"
-msgstr "Загрузить"
+msgstr ""
 
 #: templates/admin/photologue/photo/upload_zip.html:28
 msgid ""
@@ -648,99 +633,93 @@ msgid ""
 "\t\t</ul>\n"
 "\t"
 msgstr ""
-"\n"
-"<p>На этой странице вы можете загрузить несколько изображений за один раз, положив их все в zip архив. Вы можете:</p>\n"
-"<ul>\n"
-"<li>Добавить фото в новую галерею.</li>\n"
-"<li>Или, создать новую галерею с указанным названием.</li>\n"
-"</ul>"
 
 #: templates/admin/photologue/photo/upload_zip.html:39
 msgid "Please correct the error below."
-msgstr "Пожалуйста исправьте ошибку ниже."
+msgstr ""
 
 #: templates/admin/photologue/photo/upload_zip.html:39
 msgid "Please correct the errors below."
-msgstr "Пожалуйста исправьте ошибки ниже."
+msgstr ""
 
 #: templates/photologue/gallery_archive.html:4
 #: templates/photologue/gallery_archive.html:9
 msgid "Latest photo galleries"
-msgstr "Последнии фото-галереи"
+msgstr ""
 
 #: templates/photologue/gallery_archive.html:16
 #: templates/photologue/photo_archive.html:16
 msgid "Filter by year"
-msgstr "Фильтр по годам"
+msgstr ""
 
 #: templates/photologue/gallery_archive.html:32
 #: templates/photologue/gallery_list.html:26
 msgid "No galleries were found"
-msgstr "Галереи не найдены"
+msgstr ""
 
 #: templates/photologue/gallery_archive_day.html:4
 #: templates/photologue/gallery_archive_day.html:9
 #, python-format
 msgid "Galleries for %(show_day)s"
-msgstr "Галереи за %(show_day)s"
+msgstr ""
 
 #: templates/photologue/gallery_archive_day.html:18
 #: templates/photologue/gallery_archive_month.html:32
 #: templates/photologue/gallery_archive_year.html:32
 msgid "No galleries were found."
-msgstr "Галереи не найдены"
+msgstr ""
 
 #: templates/photologue/gallery_archive_day.html:22
 msgid "View all galleries for month"
-msgstr "Посмотреть все галереи за месяц"
+msgstr ""
 
 #: templates/photologue/gallery_archive_month.html:4
 #: templates/photologue/gallery_archive_month.html:9
 #, python-format
 msgid "Galleries for %(show_month)s"
-msgstr "Галереи за %(show_month)s"
+msgstr ""
 
 #: templates/photologue/gallery_archive_month.html:16
 #: templates/photologue/photo_archive_month.html:16
 msgid "Filter by day"
-msgstr "Фильтр по дням"
+msgstr ""
 
 #: templates/photologue/gallery_archive_month.html:35
 msgid "View all galleries for year"
-msgstr "Посмотреть все галереи за год"
+msgstr ""
 
 #: templates/photologue/gallery_archive_year.html:4
 #: templates/photologue/gallery_archive_year.html:9
 #, python-format
 msgid "Galleries for %(show_year)s"
-msgstr "Галереи за %(show_year)s"
+msgstr ""
 
 #: templates/photologue/gallery_archive_year.html:16
 #: templates/photologue/photo_archive_year.html:17
 msgid "Filter by month"
-msgstr "Фильтр по месяцам"
+msgstr ""
 
 #: templates/photologue/gallery_archive_year.html:35
 #: templates/photologue/gallery_detail.html:17
 msgid "View all galleries"
-msgstr "Посмотреть все галереи"
+msgstr ""
 
 #: templates/photologue/gallery_detail.html:10
 #: templates/photologue/gallery_list.html:16
 #: templates/photologue/includes/gallery_sample.html:8
 #: templates/photologue/photo_detail.html:10
 msgid "Published"
-msgstr "Опубликованно"
+msgstr ""
 
 #: templates/photologue/gallery_list.html:4
 #: templates/photologue/gallery_list.html:9
 msgid "All galleries"
-msgstr "Все галереи"
+msgstr ""
 
 #: templates/photologue/includes/paginator.html:6
 #: templates/photologue/includes/paginator.html:8
 msgid "Previous"
-msgstr "Предыдущая"
+msgstr ""
 
 #: templates/photologue/includes/paginator.html:11
 #, python-format
@@ -749,18 +728,16 @@ msgid ""
 "\t\t\t\t    page %(page_number)s of %(total_pages)s\n"
 "\t\t\t\t"
 msgstr ""
-"\n"
-"страница %(page_number)s из %(total_pages)s"
 
 #: templates/photologue/includes/paginator.html:16
 #: templates/photologue/includes/paginator.html:18
 msgid "Next"
-msgstr "Следующая"
+msgstr ""
 
 #: templates/photologue/photo_archive.html:4
 #: templates/photologue/photo_archive.html:9
 msgid "Latest photos"
-msgstr "Последнии фотографии"
+msgstr ""
 
 #: templates/photologue/photo_archive.html:34
 #: templates/photologue/photo_archive_day.html:21
@@ -768,58 +745,46 @@ msgstr "Последнии фотографии"
 #: templates/photologue/photo_archive_year.html:37
 #: templates/photologue/photo_list.html:21
 msgid "No photos were found"
-msgstr "Фотографии не найдены"
+msgstr ""
 
 #: templates/photologue/photo_archive_day.html:4
 #: templates/photologue/photo_archive_day.html:9
 #, python-format
 msgid "Photos for %(show_day)s"
-msgstr "Фотографии за %(show_day)s"
+msgstr ""
 
 #: templates/photologue/photo_archive_day.html:24
 msgid "View all photos for month"
-msgstr "Все фотографии за месяц"
+msgstr ""
 
 #: templates/photologue/photo_archive_month.html:4
 #: templates/photologue/photo_archive_month.html:9
 #, python-format
 msgid "Photos for %(show_month)s"
-msgstr "Фотографии за %(show_month)s"
+msgstr ""
 
 #: templates/photologue/photo_archive_month.html:39
 msgid "View all photos for year"
-msgstr "Все фотографии за год"
+msgstr ""
 
 #: templates/photologue/photo_archive_year.html:4
 #: templates/photologue/photo_archive_year.html:10
 #, python-format
 msgid "Photos for %(show_year)s"
-msgstr "Фотографии за %(show_year)s"
+msgstr ""
 
 #: templates/photologue/photo_archive_year.html:40
 msgid "View all photos"
-msgstr "Посмотреть все фотографии"
+msgstr ""
 
 #: templates/photologue/photo_detail.html:22
 msgid "This photo is found in the following galleries"
-msgstr "Эта фотография найдена в следующих галереях"
+msgstr ""
 
 #: templates/photologue/photo_list.html:4
 #: templates/photologue/photo_list.html:9
 msgid "All photos"
-msgstr "Все фотографии"
-
-#~ msgid ""
-#~ "All uploaded photos will be given a title made up of this title + a "
-#~ "sequential number."
-#~ msgstr "Все загруженные фотографии получат это название + порядковый номер."
-
-#~ msgid ""
-#~ "Did not create photo \"%(filename)s\" with slug \"{1}\" as a photo with that"
-#~ " slug already exists."
-#~ msgstr ""
-#~ "Не удалось создать фото \"%(filename)s\" со слагом \"{1}\" так как уже есть "
-#~ "фото с этим слагом."
+msgstr ""
 
 #~ msgid "Separate tags with spaces, put quotes around multiple-word tags."
 #~ msgstr "Separate tags with spaces, put quotes around multiple-word tags."
