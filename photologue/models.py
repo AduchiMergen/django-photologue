@@ -429,10 +429,10 @@ class ImageModel(models.Model):
         # Save the original format
         im_format = im.format
         # Rotate if found & necessary
-        if 'Image Orientation' in self.EXIF and \
-                self.EXIF.get('Image Orientation').values[0] in IMAGE_EXIF_ORIENTATION_MAP:
+        if 'Image Orientation' in self.EXIF() and \
+                self.EXIF().get('Image Orientation').values[0] in IMAGE_EXIF_ORIENTATION_MAP:
             im = im.transpose(
-                IMAGE_EXIF_ORIENTATION_MAP[self.EXIF.get('Image Orientation').values[0]])
+                IMAGE_EXIF_ORIENTATION_MAP[self.EXIF().get('Image Orientation').values[0]])
         # Apply effect if found
         if self.effect is not None:
             im = self.effect.pre_process(im)
