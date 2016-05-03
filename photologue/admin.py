@@ -140,15 +140,21 @@ class PhotoAdminForm(forms.ModelForm):
             exclude = []
         else:
             exclude = ['sites']
+        widgets = {'original_file_name': forms.HiddenInput()}
+
+    def clean(self):
+        cleaned_data = super(PhotoAdminForm, self).clean()
+        cleaned_data['original_file_name'] = cleaned_data['image'].name
+        return cleaned_data
 
 
 class PhotoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date_taken', 'date_added',
+    list_display = ('title', 'original_file_name', 'date_added',
                     'is_public', 'view_count', 'admin_thumbnail')
     list_filter = ['date_added', 'is_public']
     if MULTISITE:
         list_filter.append('sites')
-    search_fields = ['title', 'slug', 'caption']
+    search_fields = ['title', 'original_file_name', 'slug', 'caption']
     list_per_page = 10
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ('date_taken',)

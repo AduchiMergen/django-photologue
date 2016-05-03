@@ -152,7 +152,7 @@ class UploadZipForm(forms.Form):
             photo_title = photo_title_root
             slug = slugify(unidecode(photo_title))
             while True:
-                photo_title = ' '.join([photo_title_root, str(count)])
+                photo_title = ' '.join([str(count), photo_title_root])
                 slug = slugify(unidecode(photo_title))
                 if Photo.objects.filter(slug=slug).exists():
                     count += 1
@@ -161,6 +161,7 @@ class UploadZipForm(forms.Form):
 
             photo = Photo(title=photo_title,
                           slug=slug,
+                          original_file_name=filename,
                           caption=self.cleaned_data['caption'],
                           is_public=self.cleaned_data['is_public'])
 

@@ -263,6 +263,8 @@ class ImageModel(models.Model):
     image = models.ImageField(_('image'),
                               max_length=IMAGE_FIELD_MAX_LENGTH,
                               upload_to=get_storage_path)
+    original_file_name = models.CharField(_('original file name'),
+                                          max_length=1000, blank=True)
     date_taken = models.DateTimeField(_('date taken'),
                                       null=True,
                                       blank=True,
