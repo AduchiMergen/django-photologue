@@ -14,11 +14,12 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.encoding import force_text, smart_str, filepath_to_uri
 from django.utils.functional import curry
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.validators import RegexValidator
@@ -281,7 +282,8 @@ class ImageModel(models.Model):
                                null=True,
                                blank=True,
                                related_name="%(class)s_related",
-                               verbose_name=_('effect'))
+                               verbose_name=_('effect'),
+                               on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -303,11 +305,9 @@ class ImageModel(models.Model):
             return _('An "admin_thumbnail" photo size has not been defined.')
         else:
             if hasattr(self, 'get_absolute_url'):
-                return u'<a href="%s"><img src="%s"></a>' % \
-                    (self.get_absolute_url(), func())
+                return mark_safe(u'<a href="{}"><img src="{}"></a>'.format(self.get_absolute_url(), func()))
             else:
-                return u'<a href="%s"><img src="%s"></a>' % \
-                    (self.image.url, func())
+                return mark_safe(u'<a href="{}"><img src="{}"></a>'.format(self.image.url, func()))
     admin_thumbnail.short_description = _('Thumbnail')
     admin_thumbnail.allow_tags = True
 
@@ -332,8 +332,11 @@ class ImageModel(models.Model):
         photosize = PhotoSizeCache().sizes.get(size)
         if not self.size_exists(photosize):
             self.create_size(photosize)
-        return Image.open(self.image.storage.open(
+        try:
+            return Image.open(self.image.storage.open(
             self._get_SIZE_filename(size))).size
+        except:
+            return None
 
     def _get_SIZE_url(self, size):
         photosize = PhotoSizeCache().sizes.get(size)
@@ -455,6 +458,9 @@ class ImageModel(models.Model):
         im_filename = getattr(self, "get_%s_filename" % photosize.name)()
         try:
             buffer = BytesIO()
+            # Issue #182 - test fix from https://github.com/bashu/django-watermark/issues/31
+            if im.mode.endswith('A'):
+                im = im.convert(im.mode[:-1])
             if im_format != 'JPEG':
                 im.save(buffer, im_format)
             else:
@@ -507,7 +513,7 @@ class ImageModel(models.Model):
             try:
                 exif_date = self.EXIF(self.image.file).get('EXIF DateTimeOriginal', None)
                 if exif_date is not None:
-                    d, t = str.split(exif_date.values)
+                    d, t = exif_date.values.split()
                     year, month, day = d.split(':')
                     hour, minute, second = t.split(':')
                     self.date_taken = datetime(int(year), int(month), int(day),
@@ -634,6 +640,9 @@ class BaseEffect(models.Model):
                 'Photologue was unable to open the sample image: %s.' % SAMPLE_IMAGE_PATH)
         im = self.process(im)
         buffer = BytesIO()
+        # Issue #182 - test fix from https://github.com/bashu/django-watermark/issues/31
+        if im.mode.endswith('A'):
+            im = im.convert(im.mode[:-1])
         im.save(buffer, 'JPEG', quality=90, optimize=True)
         buffer_contents = ContentFile(buffer.getvalue())
         default_storage.save(self.sample_filename(), buffer_contents)
@@ -835,12 +844,14 @@ class PhotoSize(models.Model):
                                null=True,
                                blank=True,
                                related_name='photo_sizes',
-                               verbose_name=_('photo effect'))
+                               verbose_name=_('photo effect'),
+                               on_delete=models.CASCADE)
     watermark = models.ForeignKey('photologue.Watermark',
                                   null=True,
                                   blank=True,
                                   related_name='photo_sizes',
-                                  verbose_name=_('watermark image'))
+                                  verbose_name=_('watermark image'),
+                                  on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['width', 'height']

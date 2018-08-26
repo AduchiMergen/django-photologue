@@ -2,8 +2,10 @@
 import uuid
 import os
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
-
+try: # for pip >= 10
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
 import photologue
 
 
@@ -14,7 +16,7 @@ def get_requirements(source):
     except TypeError:
         # Older version of pip.
         install_reqs = parse_requirements(source)
-    required = set([str(ir.req) for ir in install_reqs])
+    required = sorted(set([str(ir.req) for ir in install_reqs]))
 
     # Temp situation: transition from PIL to Pillow, add a hook so people can
     # skip installing Pillow.
@@ -41,8 +43,6 @@ setup(
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.2',
-                 'Programming Language :: Python :: 3.3',
                  'Programming Language :: Python :: 3.4',
                  'Programming Language :: Python :: 3.5',
                  'Topic :: Utilities'],

@@ -4,10 +4,6 @@ Django-photologue
     :target: https://pypi.python.org/pypi/django-photologue/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/pypi/dm/django-photologue.svg
-    :target: https://pypi.python.org/pypi/django-photologue/
-    :alt: Number of PyPI downloads
-
 .. image:: https://img.shields.io/pypi/wheel/django-photologue.svg
     :target: https://pypi.python.org/pypi/django-photologue/
     :alt: Wheel Status
@@ -29,7 +25,7 @@ Take a closer look
 
 Documentation
 -------------
-Please head over to our `online documentation at ReadTheDocs <https://django-photologue.readthedocs.org/>`_ 
+Please head over to our `online documentation at ReadTheDocs <https://django-photologue.readthedocs.io/en/stable/>`_ 
 for instructions on installing and configuring this application.
 
 Python 3? Amazon S3?

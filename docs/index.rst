@@ -6,15 +6,16 @@
 Welcome to django-photologue's documentation!
 =============================================
 
-The Photologue documentation is being transferred from a Google Code wiki to a
-Sphinx-generated setup (if you're reading this at readthedocs.org, then you're
-looking at these docs).
+.. include:: ../README.rst
+   :start-line: 0
+   :end-line: 25
 
-This documentation is accurate and up-to-date (hopefully!);
-`the old docs on the Google Code wiki <http://code.google.com/p/django-photologue/w/list>`_
-are extensive but have not been updated in a long time.
+.. include:: ../README.rst
+   :start-line: 31
+   :end-line: 46
 
 Contents:
+=========
 
 .. toctree::
     :maxdepth: 2
